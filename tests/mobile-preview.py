@@ -1,5 +1,5 @@
 """Review deployment checks in isolated browser storage, never a player's browser."""
-import os
+import os,json
 from functools import partial
 from http.server import ThreadingHTTPServer,SimpleHTTPRequestHandler
 from pathlib import Path
@@ -24,10 +24,12 @@ try:
    assert original()==[None,None]
    assert page.evaluate("JSON.parse(localStorage.getItem('mgg-pr-1:mgg10')).cash")==50
    # A real pre-existing farm: rewards, garden, inventory and mid-payment market.
-   fixture=page.evaluate('''()=>{const s=Game.initial();s.cash=1500;for(const id of ['ball','bike','camera'])Game.purchaseDream(s,id);s.day=9;s.season=2;s.seeds.carrot=7;s.plots[0]={id:'carrot',age:1,watered:true,left:0,quality:100};s.inventory.carrot=s.display.carrot=20;s.owned.scale=1;s.bagCount=9;Game.openMarket(s);Game.newCustomer(s,'Ruby');Game.greet(s,'good');s.customer.want={carrot:1};s.basket={carrot:1};while(Game.nextMathLine(s))Game.answerMathLine(s,Game.nextMathLine(s),Game.lineTotal(s,Game.nextMathLine(s)));Game.ring(s,Game.totalOrder(s));s.change=Game.changeDue(s);Game.pauseMarketClock(s);s.marketElapsedMs=123456;return JSON.stringify(s)}''')
-   page.evaluate("raw=>{localStorage.clear();localStorage.setItem('mgg10',raw);localStorage.setItem('mgg10-backup',raw)}",fixture)
+   fixture=page.evaluate('''()=>{const s=Game.initial();s.cash=1500;for(const id of ['ball','bike','camera'])Game.purchaseDream(s,id);s.day=9;s.season=2;s.seeds.carrot=7;s.plots[0]={id:'carrot',age:1,watered:true,left:0,quality:100};s.inventory.carrot=s.display.carrot=20;s.owned.scale=1;s.bagCount=9;Game.openMarket(s);Game.newCustomer(s,'Ruby');Game.greet(s,'good');s.customer.want={carrot:1};s.basket={carrot:1};while(Game.nextMathLine(s))Game.answerMathLine(s,Game.nextMathLine(s),Game.lineTotal(s,Game.nextMathLine(s)));Game.ring(s,Game.totalOrder(s));s.change=Game.changeDue(s);Game.pauseMarketClock(s);s.marketElapsedMs=123456;Game.syncMarketClock(s);return JSON.stringify(s)}''')
+   # Install once before bootstrap, after the outgoing page's pagehide save.
+   page.add_init_script("if(!sessionStorage.getItem('__prFixtureSet')){const raw="+json.dumps(fixture)+";localStorage.clear();localStorage.setItem('mgg10',raw);localStorage.setItem('mgg10-backup',raw);sessionStorage.setItem('__prFixtureSet','1')}")
    page.reload();assert original()==[fixture,fixture]
-   assert page.evaluate('(raw)=>JSON.stringify(state)===JSON.stringify(Game.recover(raw))',fixture)
+   differences=page.evaluate('(raw)=>{const expected=Game.recover(raw);return Object.keys(state).filter(k=>JSON.stringify(state[k])!==JSON.stringify(expected[k])).map(k=>({key:k,current:state[k],expected:expected[k]}))}',fixture)
+   assert not differences,differences
    assert page.evaluate('marketAwaitingResume') is True
    page.wait_for_function('clubhouseRoom.bookTableImage?.naturalWidth && clubhouseRoom.bookImage?.naturalWidth')
    assert page.locator('.clubhouse-guidebook').is_visible()
@@ -56,7 +58,7 @@ try:
    assert page.evaluate('state.cash')!=999
    # Corrupt PR primary recovers its independent backup without reading live data.
    backup=page.evaluate("localStorage.getItem('mgg-pr-1:mgg10-backup')")
-   page.evaluate("localStorage.setItem('mgg-pr-1:mgg10','{broken')");page.reload()
+   page.add_init_script("if(!sessionStorage.getItem('__prBrokenSet')){localStorage.setItem('mgg-pr-1:mgg10','{broken');sessionStorage.setItem('__prBrokenSet','1')}");page.reload()
    assert page.evaluate('(raw)=>JSON.stringify(state)===JSON.stringify(Game.recover(raw))',backup)
    assert original()==updated_original
    assert not errors,errors
