@@ -1,0 +1,17 @@
+{
+  "phase": 8,
+  "sourceRepository": "rhy4cn7rwp-prog/my-garden-grows-preview",
+  "sourceBranch": "phase-8/interactive-garden",
+  "sourceCommit": "760d64608eba3925ef2348a0d6a45f80edc37015",
+  "pullRequest": 2,
+  "hostingOnlyChanges": [
+    "Independent Phase 8 save keys",
+    "First-visit read-only copy from PR1 or original preview",
+    "Phase 8 playtest browser title"
+  ],
+  "savePrefix": "mgg-phase-8:",
+  "importPriority": [
+    "mgg-pr-1:",
+    ""
+  ]
+}
