@@ -1,0 +1,1 @@
+{"name":"my-garden-grows-pr-1-playtest","private":true,"scripts":{"test":"node --test tests/*.test.cjs"}}

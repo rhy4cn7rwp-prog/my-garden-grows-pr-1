@@ -1,0 +1,19 @@
+{
+  "sourceRepository": "rhy4cn7rwp-prog/my-garden-grows-preview",
+  "pullRequest": 1,
+  "sourceCommit": "c40273c9cec9987190a4a493ff60ca9fc6d6a91f",
+  "sourceBranch": "fix/issue-1-customers-and-guide",
+  "hostingOnlyChanges": [
+    "Namespaced primary and backup save keys",
+    "Read-only first-visit copy of existing farm",
+    "PR playtest browser-tab title"
+  ],
+  "originalSaveKeys": [
+    "mgg10",
+    "mgg10-backup"
+  ],
+  "playtestSaveKeys": [
+    "mgg-pr-1:mgg10",
+    "mgg-pr-1:mgg10-backup"
+  ]
+}
