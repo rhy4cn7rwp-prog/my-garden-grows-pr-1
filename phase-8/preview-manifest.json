@@ -2,7 +2,7 @@
   "phase": 8,
   "sourceRepository": "rhy4cn7rwp-prog/my-garden-grows-preview",
   "sourceBranch": "phase-8/interactive-garden",
-  "sourceCommit": "760d64608eba3925ef2348a0d6a45f80edc37015",
+  "sourceCommit": "9589dc4572e9721d38187903ce1900cd2d61223b",
   "pullRequest": 2,
   "hostingOnlyChanges": [
     "Independent Phase 8 save keys",

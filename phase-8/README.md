@@ -2,7 +2,7 @@
 
 https://rhy4cn7rwp-prog.github.io/my-garden-grows-pr-1/phase-8/
 
-Pinned source: `760d64608eba3925ef2348a0d6a45f80edc37015`, preview PR #2.
+Pinned source: `9589dc4572e9721d38187903ce1900cd2d61223b`, preview PR #2.
 
 The root PR #1 playtest and both existing game repositories/sites are unchanged.
 Use the same Safari profile to start from a copy of a saved PR #1 farm, or the
